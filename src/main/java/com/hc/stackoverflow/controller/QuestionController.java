@@ -1,6 +1,6 @@
 package com.hc.stackoverflow.controller;
 
-import com.hc.stackoverflow.entity.Question;
+import com.hc.stackoverflow.entity.QuestionEntity;
 import com.hc.stackoverflow.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -24,13 +24,13 @@ public class QuestionController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new question")
-    public ResponseEntity<Question> createQuestion(@RequestBody Question question) {
-        return ResponseEntity.ok(questionService.createQuestion(question));
+    public ResponseEntity<QuestionEntity> createQuestion(@RequestBody QuestionEntity questionEntity) {
+        return ResponseEntity.ok(questionService.createQuestion(questionEntity));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get question by ID")
-    public ResponseEntity<Question> getQuestion(@PathVariable Long id) {
+    public ResponseEntity<QuestionEntity> getQuestion(@PathVariable Long id) {
         return questionService.getQuestionById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,14 +38,14 @@ public class QuestionController {
 
     @GetMapping
     @Operation(summary = "Get all questions")
-    public ResponseEntity<List<Question>> getAllQuestions() {
+    public ResponseEntity<List<QuestionEntity>> getAllQuestions() {
         return ResponseEntity.ok(questionService.getAllQuestions());
     }
 
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get my questions")
-    public ResponseEntity<List<Question>> getMyQuestions(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<QuestionEntity>> getMyQuestions(@RequestHeader("Authorization") String token) {
         // Extract userId from token
         Long userId = extractUserIdFromToken(token);
         return ResponseEntity.ok(questionService.getQuestionsByUserId(userId));
@@ -53,7 +53,7 @@ public class QuestionController {
 
     @GetMapping("/search")
     @Operation(summary = "Search questions")
-    public ResponseEntity<Page<Question>> searchQuestions(
+    public ResponseEntity<Page<QuestionEntity>> searchQuestions(
             @RequestParam String query,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -71,14 +71,14 @@ public class QuestionController {
     @PostMapping("/{id}/vote-up")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote up a question")
-    public ResponseEntity<Question> voteUpQuestion(@PathVariable Long id) {
+    public ResponseEntity<QuestionEntity> voteUpQuestion(@PathVariable Long id) {
         return ResponseEntity.ok(questionService.updateQuestionVotes(id, 1));
     }
 
     @PostMapping("/{id}/vote-down")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote down a question")
-    public ResponseEntity<Question> voteDownQuestion(@PathVariable Long id) {
+    public ResponseEntity<QuestionEntity> voteDownQuestion(@PathVariable Long id) {
         return ResponseEntity.ok(questionService.updateQuestionVotes(id, -1));
     }
 
