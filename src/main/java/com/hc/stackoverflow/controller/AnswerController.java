@@ -1,6 +1,7 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.AnswerEntity;
+import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.AnswerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,6 +21,7 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class AnswerController {
     private final AnswerService answerService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -57,8 +59,7 @@ public class AnswerController {
     public ResponseEntity<AnswerEntity> acceptAnswer(
             @PathVariable Long id,
             @RequestHeader("Authorization") String token) {
-        // Extract userId from token
-        Long userId = extractUserIdFromToken(token);
+        Long userId = jwtUtil.extractUserIdFromToken(token);
         return ResponseEntity.ok(answerService.markAsAccepted(id, userId));
     }
 
@@ -84,8 +85,4 @@ public class AnswerController {
         return ResponseEntity.ok().build();
     }
 
-    private Long extractUserIdFromToken(String token) {
-        // Implement token extraction logic
-        return 1L; // Placeholder
-    }
 }

@@ -1,6 +1,7 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,6 +20,7 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
@@ -69,15 +71,11 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get current user profile")
     public ResponseEntity<UserEntity> getCurrentUser(@RequestHeader("Authorization") String token) {
-        // Extract userId from token
-        Long userId = extractUserIdFromToken(token);
+        Long userId = jwtUtil.extractUserIdFromToken(token);
         return userService.getUserById(userId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    private Long extractUserIdFromToken(String token) {
-        // Implement token extraction logic
-        return 1L; // Placeholder
-    }
+
 }

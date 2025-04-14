@@ -1,6 +1,7 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.QuestionEntity;
+import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,6 +21,7 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class QuestionController {
     private final QuestionService questionService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -46,8 +48,7 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get my questions")
     public ResponseEntity<List<QuestionEntity>> getMyQuestions(@RequestHeader("Authorization") String token) {
-        // Extract userId from token
-        Long userId = extractUserIdFromToken(token);
+        Long userId = jwtUtil.extractUserIdFromToken(token);
         return ResponseEntity.ok(questionService.getQuestionsByUserId(userId));
     }
 
@@ -82,8 +83,4 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.updateQuestionVotes(id, -1));
     }
 
-    private Long extractUserIdFromToken(String token) {
-        // Implement token extraction logic
-        return 1L; // Placeholder
-    }
 }
