@@ -47,8 +47,8 @@ public class QuestionEntity {
     private Set<Tag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Answer> answers = new HashSet<>();
+    private Set<AnswerEntity> answers = new HashSet<>();
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments = new HashSet<>();
+    private Set<CommentEntity> comments = new HashSet<>();
 }

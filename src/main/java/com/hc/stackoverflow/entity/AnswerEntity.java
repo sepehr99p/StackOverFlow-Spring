@@ -45,5 +45,5 @@ public class AnswerEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments;
+    private Set<CommentEntity> comments;
 }
