@@ -29,22 +29,8 @@ public class AnswerController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new answer")
-    public ResponseEntity<?> createAnswer(@RequestBody AnswerEntity answer) {
-        try {
-            AnswerEntity createdAnswer = answerService.createAnswer(answer);
-            return ResponseEntity.ok(createdAnswer);
-        } catch (RuntimeException e) {
-            Map<String,String> error = new HashMap<>();
-            if (e.getMessage().equals("Question not found")) {
-                error.put("message","Question not found");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-            } else if (e.getMessage().equals("User has already answered this question")) {
-                error.put("message","User has already answered this question");
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
-            }
-            error.put("message",e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-        }
+    public ResponseEntity<AnswerEntity> createAnswer(@RequestBody AnswerEntity answer) {
+        return ResponseEntity.ok(answerService.createAnswer(answer));
     }
 
     @GetMapping("/{id}")
@@ -58,14 +44,7 @@ public class AnswerController {
     @GetMapping("/question/{questionId}")
     @Operation(summary = "Get all answers for a question")
     public ResponseEntity<?> getAnswersByQuestion(@PathVariable Long questionId) {
-        try {
-            List<AnswerEntity> answers = answerService.getAnswersByQuestionId(questionId);
-            return ResponseEntity.ok(answers);
-        } catch (Exception e) {
-            Map<String,String> error = new HashMap<>();
-            error.put("message",e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-        }
+        return ResponseEntity.ok(answerService.getAnswersByQuestionId(questionId));
     }
 
     @GetMapping("/question/{questionId}/top")

@@ -3,6 +3,8 @@ package com.hc.stackoverflow.service;
 
 import com.hc.stackoverflow.entity.AnswerEntity;
 import com.hc.stackoverflow.entity.QuestionEntity;
+import com.hc.stackoverflow.exception.DuplicateResourceException;
+import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.repository.AnswerRepository;
 import com.hc.stackoverflow.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +30,12 @@ public class AnswerService {
     @CacheEvict(value = "questions", key = "#answer.question.id")
     public AnswerEntity createAnswer(AnswerEntity answer) {
         QuestionEntity question = questionRepository.findById(answer.getQuestion().getId())
-                .orElseThrow(() -> new RuntimeException("Question not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + answer.getQuestion().getId()));
 
         Optional<AnswerEntity> existingAnswer = answerRepository.findByQuestionIdAndUserId(
                 question.getId(), answer.getUserId());
         if (existingAnswer.isPresent()) {
-            throw new RuntimeException("User has already answered this question");
+            throw new DuplicateResourceException("User has already answered this question");
         }
 
         return answerRepository.save(answer);

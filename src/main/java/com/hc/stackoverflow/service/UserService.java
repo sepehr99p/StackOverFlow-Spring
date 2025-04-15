@@ -5,12 +5,16 @@ import com.hc.stackoverflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import com.hc.stackoverflow.exception.ResourceNotFoundException;
+import com.hc.stackoverflow.exception.UserAlreadyExistsException;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +26,10 @@ public class UserService {
     @CacheEvict(value = "users", allEntries = true)
     public UserEntity createUser(UserEntity user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new RuntimeException("Username already exists");
+            throw new UserAlreadyExistsException("Username already exists");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new UserAlreadyExistsException("Email already exists");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -55,44 +59,34 @@ public class UserService {
     }
 
     @Transactional
-    @CacheEvict(value = "users", allEntries = true)
     public UserEntity updateUser(Long id, UserEntity updatedUser) {
-        UserEntity existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserEntity existingUser = getUserById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        if (updatedUser.getDisplayName() != null) {
-            existingUser.setDisplayName(updatedUser.getDisplayName());
+        if (!existingUser.getEmail().equals(updatedUser.getEmail()) &&
+                userRepository.existsByEmail(updatedUser.getEmail())) {
+            throw new UserAlreadyExistsException("Email already exists");
         }
-        if (updatedUser.getBio() != null) {
-            existingUser.setBio(updatedUser.getBio());
-        }
-        if (updatedUser.getProfilePictureUrl() != null) {
-            existingUser.setProfilePictureUrl(updatedUser.getProfilePictureUrl());
-        }
-        if (updatedUser.getPassword() != null) {
-            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-        }
+
+        existingUser.setDisplayName(updatedUser.getDisplayName());
+        existingUser.setBio(updatedUser.getBio());
+        existingUser.setProfilePictureUrl(updatedUser.getProfilePictureUrl());
+        existingUser.setEmail(updatedUser.getEmail());
 
         return userRepository.save(existingUser);
     }
 
     @Transactional
-    @CacheEvict(value = "users", allEntries = true)
-    public void updateUserReputation(Long userId, int reputationChange) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setReputation(user.getReputation() + reputationChange);
+    public void deactivateUser(Long id) {
+        UserEntity user = getUserById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        user.setIsActive(false);
         userRepository.save(user);
     }
 
-    @Transactional
-    @CacheEvict(value = "users", allEntries = true)
-    public void deactivateUser(Long id) {
-        UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setIsActive(false);
-        userRepository.save(user);
+    public void checkUserPermission(Long resourceUserId, Long currentUserId) {
+        if (!resourceUserId.equals(currentUserId)) {
+            throw new AccessDeniedException("You don't have permission to perform this action");
+        }
     }
 }

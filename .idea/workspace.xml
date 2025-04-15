@@ -5,11 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8886c0c4-8320-420c-a83c-4450673d3d5c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/dto/ErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/DuplicateResourceException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/ResourceNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/UserAlreadyExistsException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/controller/AnswerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/AnswerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/AnswerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/QuestionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/QuestionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +113,7 @@
       <option name="presentableId" value="Default" />
       <updated>1744620015248</updated>
       <workItem from="1744620016406" duration="9595000" />
-      <workItem from="1744718954071" duration="757000" />
+      <workItem from="1744718954071" duration="1690000" />
     </task>
     <servers />
   </component>

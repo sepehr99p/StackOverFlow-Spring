@@ -1,6 +1,7 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -33,7 +37,7 @@ public class UserController {
     public ResponseEntity<UserEntity> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     @GetMapping("/username/{username}")
@@ -41,7 +45,7 @@ public class UserController {
     public ResponseEntity<UserEntity> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
     }
 
     @GetMapping("/search")
@@ -55,14 +59,21 @@ public class UserController {
     @Operation(summary = "Update user profile")
     public ResponseEntity<UserEntity> updateUser(
             @PathVariable Long id,
-            @RequestBody UserEntity updatedUser) {
+            @RequestBody UserEntity updatedUser,
+            @RequestHeader("Authorization") String token) {
+        Long currentUserId = jwtUtil.extractUserIdFromToken(token);
+        userService.checkUserPermission(id, currentUserId);
         return ResponseEntity.ok(userService.updateUser(id, updatedUser));
     }
 
     @PostMapping("/{id}/deactivate")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Deactivate a user account")
-    public ResponseEntity<Void> deactivateUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deactivateUser(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String token) {
+        Long currentUserId = jwtUtil.extractUserIdFromToken(token);
+        userService.checkUserPermission(id, currentUserId);
         userService.deactivateUser(id);
         return ResponseEntity.ok().build();
     }
@@ -74,8 +85,6 @@ public class UserController {
         Long userId = jwtUtil.extractUserIdFromToken(token);
         return userService.getUserById(userId)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
-
 }
