@@ -27,11 +27,9 @@ public class AnswerService {
     @Transactional
     @CacheEvict(value = "questions", key = "#answer.question.id")
     public AnswerEntity createAnswer(AnswerEntity answer) {
-        // Verify question exists
         QuestionEntity question = questionRepository.findById(answer.getQuestion().getId())
                 .orElseThrow(() -> new RuntimeException("Question not found"));
 
-        // Check if user has already answered this question
         Optional<AnswerEntity> existingAnswer = answerRepository.findByQuestionIdAndUserId(
                 question.getId(), answer.getUserId());
         if (existingAnswer.isPresent()) {

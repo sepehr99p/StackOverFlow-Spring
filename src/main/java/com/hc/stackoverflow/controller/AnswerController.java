@@ -8,11 +8,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/answers")
@@ -26,8 +29,22 @@ public class AnswerController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new answer")
-    public ResponseEntity<AnswerEntity> createAnswer(@RequestBody AnswerEntity answer) {
-        return ResponseEntity.ok(answerService.createAnswer(answer));
+    public ResponseEntity<?> createAnswer(@RequestBody AnswerEntity answer) {
+        try {
+            AnswerEntity createdAnswer = answerService.createAnswer(answer);
+            return ResponseEntity.ok(createdAnswer);
+        } catch (RuntimeException e) {
+            Map<String,String> error = new HashMap<>();
+            if (e.getMessage().equals("Question not found")) {
+                error.put("message","Question not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            } else if (e.getMessage().equals("User has already answered this question")) {
+                error.put("message","User has already answered this question");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+            }
+            error.put("message",e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
     }
 
     @GetMapping("/{id}")
@@ -40,8 +57,15 @@ public class AnswerController {
 
     @GetMapping("/question/{questionId}")
     @Operation(summary = "Get all answers for a question")
-    public ResponseEntity<List<AnswerEntity>> getAnswersByQuestion(@PathVariable Long questionId) {
-        return ResponseEntity.ok(answerService.getAnswersByQuestionId(questionId));
+    public ResponseEntity<?> getAnswersByQuestion(@PathVariable Long questionId) {
+        try {
+            List<AnswerEntity> answers = answerService.getAnswersByQuestionId(questionId);
+            return ResponseEntity.ok(answers);
+        } catch (Exception e) {
+            Map<String,String> error = new HashMap<>();
+            error.put("message",e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
     }
 
     @GetMapping("/question/{questionId}/top")
