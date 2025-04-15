@@ -1,6 +1,7 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.QuestionEntity;
+import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/questions")
 @RequiredArgsConstructor
@@ -26,8 +28,12 @@ public class QuestionController {
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new question")
-    public ResponseEntity<QuestionEntity> createQuestion(@RequestBody QuestionEntity questionEntity) {
-        return ResponseEntity.ok(questionService.createQuestion(questionEntity));
+    public ResponseEntity<QuestionEntity> createQuestion(
+            @RequestBody QuestionEntity question,
+            @RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.extractUserIdFromToken(token);
+        question.setUserId(userId);
+        return ResponseEntity.ok(questionService.createQuestion(question));
     }
 
     @GetMapping("/{id}")
@@ -35,7 +41,7 @@ public class QuestionController {
     public ResponseEntity<QuestionEntity> getQuestion(@PathVariable Long id) {
         return questionService.getQuestionById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
     }
 
     @GetMapping
@@ -47,7 +53,8 @@ public class QuestionController {
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get my questions")
-    public ResponseEntity<List<QuestionEntity>> getMyQuestions(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<QuestionEntity>> getMyQuestions(
+            @RequestHeader("Authorization") String token) {
         Long userId = jwtUtil.extractUserIdFromToken(token);
         return ResponseEntity.ok(questionService.getQuestionsByUserId(userId));
     }
@@ -64,9 +71,25 @@ public class QuestionController {
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Delete a question")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteQuestion(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.extractUserIdFromToken(token);
+        questionService.checkQuestionOwnership(id, userId);
         questionService.deleteQuestion(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Update a question")
+    public ResponseEntity<QuestionEntity> updateQuestion(
+            @PathVariable Long id,
+            @RequestBody QuestionEntity question,
+            @RequestHeader("Authorization") String token) {
+        Long userId = jwtUtil.extractUserIdFromToken(token);
+        questionService.checkQuestionOwnership(id, userId);
+        return ResponseEntity.ok(questionService.updateQuestion(id, question));
     }
 
     @PostMapping("/{id}/vote-up")
@@ -82,5 +105,4 @@ public class QuestionController {
     public ResponseEntity<QuestionEntity> voteDownQuestion(@PathVariable Long id) {
         return ResponseEntity.ok(questionService.updateQuestionVotes(id, -1));
     }
-
 }

@@ -5,6 +5,7 @@ import com.hc.stackoverflow.entity.QuestionEntity;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,20 +17,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
     private final QuestionRepository questionRepository;
 
     @Transactional
-    public QuestionEntity createQuestion(QuestionEntity questionEntity) {
-        return questionRepository.save(questionEntity);
+    @CacheEvict(value = "questions", allEntries = true)
+    public QuestionEntity createQuestion(QuestionEntity question) {
+        return questionRepository.save(question);
     }
 
     @Cacheable(value = "questions", key = "#id")
-    public QuestionEntity getQuestionById(Long id) {
-        return questionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
+    public Optional<QuestionEntity> getQuestionById(Long id) {
+        return questionRepository.findById(id);
     }
 
     @Cacheable(value = "questions", key = "'all'")
@@ -49,18 +52,39 @@ public class QuestionService {
     }
 
     @Transactional
-    public void deleteQuestion(Long id, Long userId) {
-        QuestionEntity question = getQuestionById(id);
-        if (!question.getUserId().equals(userId)) {
-            throw new AccessDeniedException("You can only delete your own questions");
-        }
+    @CacheEvict(value = "questions", allEntries = true)
+    public void deleteQuestion(Long id) {
         questionRepository.deleteById(id);
     }
 
     @Transactional
+    @CacheEvict(value = "questions", allEntries = true)
+    public QuestionEntity updateQuestion(Long id, QuestionEntity updatedQuestion) {
+        QuestionEntity existingQuestion = getQuestionById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
+
+        existingQuestion.setTitle(updatedQuestion.getTitle());
+        existingQuestion.setDescription(updatedQuestion.getDescription());
+        existingQuestion.setTags(updatedQuestion.getTags());
+
+        return questionRepository.save(existingQuestion);
+    }
+
+    @Transactional
+    @CacheEvict(value = "questions", allEntries = true)
     public QuestionEntity updateQuestionVotes(Long id, int voteChange) {
-        QuestionEntity questionEntity = getQuestionById(id);
-        questionEntity.setVotes(questionEntity.getVotes() + voteChange);
-        return questionRepository.save(questionEntity);
+        QuestionEntity question = getQuestionById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
+        question.setVotes(question.getVotes() + voteChange);
+        return questionRepository.save(question);
+    }
+
+    public void checkQuestionOwnership(Long questionId, Long userId) {
+        QuestionEntity question = getQuestionById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + questionId));
+
+        if (!question.getUserId().equals(userId)) {
+            throw new AccessDeniedException("You don't have permission to modify this question");
+        }
     }
 }
