@@ -27,7 +27,8 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.NOT_FOUND.value()));
         errorData.put("error", "NOT_FOUND");
         errorData.put("message", ex.getMessage());
-        ErrorResponse test = new ErrorResponse(errorData);
+        ErrorResponse test = new ErrorResponse();
+        test.setErrorMessage(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -43,7 +44,8 @@ public class GlobalExceptionHandler {
         errorData.put("error", "CONFLICT");
         errorData.put("message", ex.getMessage());
 
-        ErrorResponse test = new ErrorResponse(errorData);
+        ErrorResponse test = new ErrorResponse();
+        test.setErrorMessage(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
@@ -58,7 +60,8 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.CONFLICT.value()));
         errorData.put("error", "USER_EXISTS");
         errorData.put("message", ex.getMessage());
-        ErrorResponse test = new ErrorResponse(errorData);
+        ErrorResponse test = new ErrorResponse();
+        test.setErrorMessage(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
@@ -73,10 +76,12 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.FORBIDDEN.value()));
         errorData.put("error", "FORBIDDEN");
         errorData.put("message", "You don't have permission to perform this action");
+        ErrorResponse test = new ErrorResponse();
+        test.setErrorMessage(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new ErrorResponse(errorData));
+                .body(test);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -87,7 +92,8 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.UNAUTHORIZED.value()));
         errorData.put("error", "UNAUTHORIZED");
         errorData.put("message", "Invalid credentials");
-        ErrorResponse test = new ErrorResponse(errorData);
+        ErrorResponse test = new ErrorResponse();
+        test.setErrorMessage(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -102,7 +108,8 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.BAD_REQUEST.value()));
         errorData.put("error", "BAD_REQUEST");
         errorData.put("message", ex.getMessage());
-        ErrorResponse test = new ErrorResponse(errorData);
+        ErrorResponse test = new ErrorResponse();
+        test.setErrorMessage(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

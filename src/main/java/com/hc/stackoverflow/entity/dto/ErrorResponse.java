@@ -1,9 +1,7 @@
 package com.hc.stackoverflow.entity.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Map;
 
@@ -11,5 +9,13 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorResponse {
+    public Map<String, String> getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(Map<String, String> errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     private Map<String,String> errorMessage;
 }
