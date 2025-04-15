@@ -31,20 +31,68 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column
     private String displayName;
 
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
     @Column
     private String bio;
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
+    }
 
     @Column
     private String profilePictureUrl;
 
+    public Integer getReputation() {
+        return reputation;
+    }
+
+    public void setReputation(Integer reputation) {
+        this.reputation = reputation;
+    }
+
     @Column
     private Integer reputation = 0;
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Column
     private Boolean isActive = true;

@@ -26,6 +26,14 @@ public class AnswerEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
@@ -33,8 +41,24 @@ public class AnswerEntity {
     @JoinColumn(name = "question_id", nullable = false)
     private QuestionEntity question;
 
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
+    }
+
     @Column(nullable = false)
     private boolean isAccepted = false;
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
 
     @Column(nullable = false)
     private int votes = 0;
