@@ -27,10 +27,11 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.NOT_FOUND.value()));
         errorData.put("error", "NOT_FOUND");
         errorData.put("message", ex.getMessage());
+        ErrorResponse test = new ErrorResponse(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse(errorData));
+                .body(test);
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
@@ -42,9 +43,11 @@ public class GlobalExceptionHandler {
         errorData.put("error", "CONFLICT");
         errorData.put("message", ex.getMessage());
 
+        ErrorResponse test = new ErrorResponse(errorData);
+
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse(errorData));
+                .body(test);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
@@ -55,10 +58,11 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.CONFLICT.value()));
         errorData.put("error", "USER_EXISTS");
         errorData.put("message", ex.getMessage());
+        ErrorResponse test = new ErrorResponse(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse(errorData));
+                .body(test);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -83,10 +87,11 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.UNAUTHORIZED.value()));
         errorData.put("error", "UNAUTHORIZED");
         errorData.put("message", "Invalid credentials");
+        ErrorResponse test = new ErrorResponse(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponse(errorData));
+                .body(test);
     }
 
     @ExceptionHandler(Exception.class)
@@ -97,9 +102,10 @@ public class GlobalExceptionHandler {
         errorData.put("status", String.valueOf(HttpStatus.BAD_REQUEST.value()));
         errorData.put("error", "BAD_REQUEST");
         errorData.put("message", ex.getMessage());
+        ErrorResponse test = new ErrorResponse(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(errorData));
+                .body(test);
     }
 }

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="DiffGenerationConfig">
-    <option name="snapshotDb" value="false" />
-    <option name="snapshotModelValue" value="stackoverflow.main:entityManagerFactory" />
-    <option name="sourceModelValue" value="stackoverflow.main:entityManagerFactory" />
-    <option name="targetDbValue" value="5f86fd93-1603-46fe-96d3-d8722c280011" />
-  </component>
-</project>
