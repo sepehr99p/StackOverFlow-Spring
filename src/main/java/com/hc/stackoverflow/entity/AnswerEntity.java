@@ -58,4 +58,13 @@ public class AnswerEntity {
         comments.remove(comment);
         comment.setAnswer(null);
     }
+
+    // Explicitly define getter and setter for question
+    public QuestionEntity getQuestion() {
+        return this.question;
+    }
+
+    public void setQuestion(QuestionEntity question) {
+        this.question = question;
+    }
 }

@@ -40,4 +40,21 @@ public class CommentEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    // Explicitly define getter and setter for question
+    public QuestionEntity getQuestion() {
+        return this.question;
+    }
+
+    public void setQuestion(QuestionEntity question) {
+        this.question = question;
+    }
+
+    public AnswerEntity getAnswer() {
+        return this.answer;
+    }
+
+    public void setAnswer(AnswerEntity answer) {
+        this.answer = answer;
+    }
 }

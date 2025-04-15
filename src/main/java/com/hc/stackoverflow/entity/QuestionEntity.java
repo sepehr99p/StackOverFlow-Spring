@@ -94,4 +94,8 @@ public class QuestionEntity {
         comments.remove(comment);
         comment.setQuestion(null);
     }
+
+    public void setUserId(Long id) {
+        this.userId = id;
+    }
 }
