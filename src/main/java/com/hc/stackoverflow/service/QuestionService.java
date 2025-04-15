@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
-    private final QuestionRepository questionRepository;
+    private final QuestionRepository    questionRepository;
 
     @Transactional
     @CacheEvict(value = "questions", allEntries = true)

@@ -30,6 +30,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionEntity {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,8 +45,20 @@ public class QuestionEntity {
     @Column(nullable = false)
     private String title;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    public Long getUserId() {
+        return userId;
+    }
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -49,8 +69,24 @@ public class QuestionEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
+
     @Column(nullable = false)
     private int votes = 0;
+
+    public Set<TagEntity> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<TagEntity> tags) {
+        this.tags = tags;
+    }
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -98,4 +134,13 @@ public class QuestionEntity {
     public void setUserId(Long id) {
         this.userId = id;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
 }
