@@ -44,10 +44,10 @@ public class UserEntity implements UserDetails {
     private String profilePictureUrl;
 
     @Column
-    private Integer reputation;
+    private Integer reputation = 0;
 
     @Column
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -55,9 +55,20 @@ public class UserEntity implements UserDetails {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    // UserDetails interface implementations
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -78,5 +89,14 @@ public class UserEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isActive != null && isActive;
+    }
+
+    // Custom setters to work with @Data
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

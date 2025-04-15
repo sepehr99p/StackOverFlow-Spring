@@ -5,15 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8886c0c4-8320-420c-a83c-4450673d3d5c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/DuplicateResourceException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/ResourceNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/exception/UserAlreadyExistsException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/diff-generator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jpb-settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/stackoverflow.main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/TagEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V3__.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V4__.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/controller/AnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/controller/AnswerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/AnswerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/AnswerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/QuestionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/QuestionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/AnswerEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/AnswerEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/CommentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/CommentEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/QuestionEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/QuestionEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hc/stackoverflow/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,12 +60,17 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="com.intellij.jpb.FlywayMigrationScript" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -65,12 +84,15 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Gradle.Build StackOverFlow-Spring.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
     &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
     &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
     &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.StackoverflowApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/sep/IdeaProjects/StackOverFlow-Spring&quot;,
@@ -113,7 +135,7 @@
       <option name="presentableId" value="Default" />
       <updated>1744620015248</updated>
       <workItem from="1744620016406" duration="9595000" />
-      <workItem from="1744718954071" duration="1690000" />
+      <workItem from="1744718954071" duration="4852000" />
     </task>
     <servers />
   </component>
