@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: stackoverflow_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: stackoverflow_db
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: rootpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - stackoverflow_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: stackoverflow_app
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/stackoverflow_db
+      SPRING_DATASOURCE_USERNAME: dev
+      SPRING_DATASOURCE_PASSWORD: rootpass
+      SPRING_FLYWAY_URL: jdbc:mysql://mysql:3306/stackoverflow_db
+      SPRING_FLYWAY_USER: dev
+      SPRING_FLYWAY_PASSWORD: rootpass
+    ports:
+      - "8080:8080"
+    networks:
+      - stackoverflow_network
+
+networks:
+  stackoverflow_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
