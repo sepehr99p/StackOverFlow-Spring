@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +27,13 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/register")
+    @PostMapping(path = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Register a new user")
     public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get user by ID")
     public ResponseEntity<UserEntity> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
@@ -40,7 +41,7 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
-    @GetMapping("/username/{username}")
+    @GetMapping(path = "/username/{username}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get user by username")
     public ResponseEntity<UserEntity> getUserByUsername(@PathVariable String username) {
         return userService.getUserByUsername(username)
@@ -48,13 +49,13 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
     }
 
-    @GetMapping("/search")
+    @GetMapping(path = "/search",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Search users by keyword")
     public ResponseEntity<List<UserEntity>> searchUsers(@RequestParam String keyword) {
         return ResponseEntity.ok(userService.searchUsers(keyword));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Update user profile")
     public ResponseEntity<UserEntity> updateUser(
@@ -66,7 +67,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, updatedUser));
     }
 
-    @PostMapping("/{id}/deactivate")
+    @PostMapping(path = "/{id}/deactivate",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Deactivate a user account")
     public ResponseEntity<Void> deactivateUser(
@@ -78,7 +79,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/me")
+    @GetMapping(path = "/me",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get current user profile")
     public ResponseEntity<UserEntity> getCurrentUser(@RequestHeader("Authorization") String token) {

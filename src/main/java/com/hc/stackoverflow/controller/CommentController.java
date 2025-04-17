@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,14 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new comment")
     public ResponseEntity<CommentEntity> createComment(@RequestBody CommentEntity comment) {
         return ResponseEntity.ok(commentService.createComment(comment));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get comment by ID")
     public ResponseEntity<CommentEntity> getComment(@PathVariable Long id) {
         return commentService.getCommentById(id)
@@ -36,25 +37,25 @@ public class CommentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/question/{questionId}")
+    @GetMapping(path = "/question/{questionId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all comments for a question")
     public ResponseEntity<List<CommentEntity>> getCommentsByQuestion(@PathVariable Long questionId) {
         return ResponseEntity.ok(commentService.getCommentsByQuestionId(questionId));
     }
 
-    @GetMapping("/answer/{answerId}")
+    @GetMapping(path = "/answer/{answerId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all comments for an answer")
     public ResponseEntity<List<CommentEntity>> getCommentsByAnswer(@PathVariable Long answerId) {
         return ResponseEntity.ok(commentService.getCommentsByAnswerId(answerId));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping(path = "/user/{userId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all comments by a user")
     public ResponseEntity<List<CommentEntity>> getCommentsByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(commentService.getCommentsByUserId(userId));
     }
 
-    @GetMapping("/question/{questionId}/page")
+    @GetMapping(path = "/question/{questionId}/page",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get paginated comments for a question")
     public ResponseEntity<Page<CommentEntity>> getCommentsByQuestion(
             @PathVariable Long questionId,
@@ -63,7 +64,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getCommentsByQuestionId(questionId, page, size));
     }
 
-    @GetMapping("/answer/{answerId}/page")
+    @GetMapping(path = "/answer/{answerId}/page",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get paginated comments for an answer")
     public ResponseEntity<Page<CommentEntity>> getCommentsByAnswer(
             @PathVariable Long answerId,
@@ -72,7 +73,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getCommentsByAnswerId(answerId, page, size));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Delete a comment")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {

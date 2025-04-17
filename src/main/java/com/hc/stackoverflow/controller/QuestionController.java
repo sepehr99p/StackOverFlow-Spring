@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class QuestionController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new question")
     public ResponseEntity<QuestionEntity> createQuestion(
@@ -42,7 +43,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.createQuestion(question));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get question by ID")
     public ResponseEntity<QuestionEntity> getQuestion(@PathVariable Long id) {
         return questionService.getQuestionById(id)
@@ -50,13 +51,13 @@ public class QuestionController {
                 .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + id));
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all questions")
     public ResponseEntity<List<QuestionEntity>> getAllQuestions() {
         return ResponseEntity.ok(questionService.getAllQuestions());
     }
 
-    @GetMapping("/my")
+    @GetMapping(path = "/my",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get my questions")
     public ResponseEntity<List<QuestionEntity>> getMyQuestions(
@@ -65,7 +66,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.getQuestionsByUserId(userId));
     }
 
-    @GetMapping("/search")
+    @GetMapping(path = "/search",produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Search questions")
     public ResponseEntity<Page<QuestionEntity>> searchQuestions(
             @RequestParam String query,
@@ -74,7 +75,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.searchQuestions(query, page, size));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Delete a question")
     public ResponseEntity<Void> deleteQuestion(
@@ -86,7 +87,7 @@ public class QuestionController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Update a question")
     public ResponseEntity<QuestionEntity> updateQuestion(
@@ -98,14 +99,14 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.updateQuestion(id, question));
     }
 
-    @PostMapping("/{id}/vote-up")
+    @PostMapping(path = "/{id}/vote-up",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote up a question")
     public ResponseEntity<QuestionEntity> voteUpQuestion(@PathVariable Long id) {
         return ResponseEntity.ok(questionService.updateQuestionVotes(id, 1));
     }
 
-    @PostMapping("/{id}/vote-down")
+    @PostMapping(path = "/{id}/vote-down",produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote down a question")
     public ResponseEntity<QuestionEntity> voteDownQuestion(@PathVariable Long id) {
