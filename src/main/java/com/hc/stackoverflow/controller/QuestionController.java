@@ -26,13 +26,21 @@ public class QuestionController {
     private final QuestionService questionService;
     private final JwtUtil jwtUtil;
 
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("API is working!");
+    }
+
     @Autowired
     public QuestionController(QuestionService questionService, JwtUtil jwtUtil) {
         this.questionService = questionService;
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new question")
     public ResponseEntity<QuestionEntity> createQuestion(
@@ -99,14 +107,16 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.updateQuestion(id, question));
     }
 
-    @PostMapping(path = "/{id}/vote-up",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{id}/vote-up",produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote up a question")
     public ResponseEntity<QuestionEntity> voteUpQuestion(@PathVariable Long id) {
         return ResponseEntity.ok(questionService.updateQuestionVotes(id, 1));
     }
 
-    @PostMapping(path = "/{id}/vote-down",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{id}/vote-down",produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote down a question")
     public ResponseEntity<QuestionEntity> voteDownQuestion(@PathVariable Long id) {

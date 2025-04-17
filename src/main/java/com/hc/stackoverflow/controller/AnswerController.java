@@ -27,14 +27,17 @@ public class AnswerController {
     private final AnswerService answerService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new answer")
     public ResponseEntity<AnswerEntity> createAnswer(@RequestBody AnswerEntity answer) {
         return ResponseEntity.ok(answerService.createAnswer(answer));
     }
 
-    @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get answer by ID")
     public ResponseEntity<AnswerEntity> getAnswer(@PathVariable Long id) {
         return answerService.getAnswerById(id)
@@ -42,13 +45,13 @@ public class AnswerController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping(path = "/question/{questionId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/question/{questionId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all answers for a question")
     public ResponseEntity<?> getAnswersByQuestion(@PathVariable Long questionId) {
         return ResponseEntity.ok(answerService.getAnswersByQuestionId(questionId));
     }
 
-    @GetMapping(path = "/question/{questionId}/top",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/question/{questionId}/top", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get top answers for a question")
     public ResponseEntity<Page<AnswerEntity>> getTopAnswersByQuestion(
             @PathVariable Long questionId,
@@ -57,7 +60,8 @@ public class AnswerController {
         return ResponseEntity.ok(answerService.getTopAnswersByQuestionId(questionId, page, size));
     }
 
-    @PostMapping(path = "/{id}/accept",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{id}/accept", produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Mark an answer as accepted")
     public ResponseEntity<AnswerEntity> acceptAnswer(
@@ -67,21 +71,23 @@ public class AnswerController {
         return ResponseEntity.ok(answerService.markAsAccepted(id, userId));
     }
 
-    @PostMapping(path = "/{id}/vote-up",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{id}/vote-up", produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote up an answer")
     public ResponseEntity<AnswerEntity> voteUpAnswer(@PathVariable Long id) {
         return ResponseEntity.ok(answerService.updateAnswerVotes(id, 1));
     }
 
-    @PostMapping(path = "/{id}/vote-down",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{id}/vote-down", produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote down an answer")
     public ResponseEntity<AnswerEntity> voteDownAnswer(@PathVariable Long id) {
         return ResponseEntity.ok(answerService.updateAnswerVotes(id, -1));
     }
 
-    @DeleteMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Delete an answer")
     public ResponseEntity<Void> deleteAnswer(@PathVariable Long id) {

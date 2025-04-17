@@ -27,7 +27,8 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping(path = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/register",produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Register a new user")
     public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity user) {
         return ResponseEntity.ok(userService.createUser(user));
@@ -67,7 +68,8 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, updatedUser));
     }
 
-    @PostMapping(path = "/{id}/deactivate",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{id}/deactivate",produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Deactivate a user account")
     public ResponseEntity<Void> deactivateUser(

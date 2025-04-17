@@ -22,7 +22,10 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new comment")
     public ResponseEntity<CommentEntity> createComment(@RequestBody CommentEntity comment) {
