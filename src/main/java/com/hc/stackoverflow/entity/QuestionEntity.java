@@ -1,21 +1,10 @@
 package com.hc.stackoverflow.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.CascadeType;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,36 +19,25 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionEntity {
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    @Setter
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
+    @Setter
     @Column(nullable = false)
     private String title;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    @Setter
+    @Getter
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    public Long getUserId() {
-        return userId;
-    }
-
+    @Setter
+    @Getter
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
@@ -69,25 +47,13 @@ public class QuestionEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public int getVotes() {
-        return votes;
-    }
-
-    public void setVotes(int votes) {
-        this.votes = votes;
-    }
-
+    @Setter
+    @Getter
     @Column(nullable = false)
     private int votes = 0;
 
-    public Set<TagEntity> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<TagEntity> tags) {
-        this.tags = tags;
-    }
-
+    @Setter
+    @Getter
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "question_tags",
@@ -129,18 +95,6 @@ public class QuestionEntity {
     public void removeComment(CommentEntity comment) {
         comments.remove(comment);
         comment.setQuestion(null);
-    }
-
-    public void setUserId(Long id) {
-        this.userId = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return this.title;
     }
 
 }

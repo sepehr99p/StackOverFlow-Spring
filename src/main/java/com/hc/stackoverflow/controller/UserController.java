@@ -1,8 +1,8 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.UserEntity;
-import com.hc.stackoverflow.entity.dto.AuthResponseDto;
-import com.hc.stackoverflow.entity.dto.RegisterRequestDto;
+import com.hc.stackoverflow.entity.dto.response.AuthResponseDto;
+import com.hc.stackoverflow.entity.dto.param.RegisterRequestDto;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.UserService;
@@ -17,8 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
 
 
 @RestController

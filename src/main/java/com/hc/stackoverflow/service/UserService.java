@@ -1,8 +1,8 @@
 package com.hc.stackoverflow.service;
 
 import com.hc.stackoverflow.entity.UserEntity;
-import com.hc.stackoverflow.entity.dto.AuthResponseDto;
-import com.hc.stackoverflow.entity.dto.RegisterRequestDto;
+import com.hc.stackoverflow.entity.dto.response.AuthResponseDto;
+import com.hc.stackoverflow.entity.dto.param.RegisterRequestDto;
 import com.hc.stackoverflow.repository.UserRepository;
 import com.hc.stackoverflow.security.JwtUtil;
 import lombok.RequiredArgsConstructor;

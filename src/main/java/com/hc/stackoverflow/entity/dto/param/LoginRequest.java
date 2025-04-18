@@ -1,4 +1,4 @@
-package com.hc.stackoverflow.entity.dto;
+package com.hc.stackoverflow.entity.dto.param;
 
 import lombok.Data;
 

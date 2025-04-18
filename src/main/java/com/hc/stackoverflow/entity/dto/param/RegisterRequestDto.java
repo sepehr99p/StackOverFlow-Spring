@@ -1,4 +1,4 @@
-package com.hc.stackoverflow.entity.dto;
+package com.hc.stackoverflow.entity.dto.param;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

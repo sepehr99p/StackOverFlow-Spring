@@ -1,7 +1,7 @@
 package com.hc.stackoverflow.exception;
 
 
-import com.hc.stackoverflow.entity.dto.ErrorResponse;
+import com.hc.stackoverflow.entity.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

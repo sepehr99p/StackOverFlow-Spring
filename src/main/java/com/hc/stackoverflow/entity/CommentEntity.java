@@ -27,10 +27,14 @@ public class CommentEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Setter
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private QuestionEntity question;
 
+    @Setter
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id")
     private AnswerEntity answer;
@@ -41,20 +45,4 @@ public class CommentEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    // Explicitly define getter and setter for question
-    public QuestionEntity getQuestion() {
-        return this.question;
-    }
-
-    public void setQuestion(QuestionEntity question) {
-        this.question = question;
-    }
-
-    public AnswerEntity getAnswer() {
-        return this.answer;
-    }
-
-    public void setAnswer(AnswerEntity answer) {
-        this.answer = answer;
-    }
 }

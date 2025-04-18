@@ -26,17 +26,13 @@ public class AnswerEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
+    @Setter
+    @Getter
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Setter
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private QuestionEntity question;
@@ -52,14 +48,8 @@ public class AnswerEntity {
     @Column(nullable = false)
     private boolean isAccepted = false;
 
-    public int getVotes() {
-        return votes;
-    }
-
-    public void setVotes(int votes) {
-        this.votes = votes;
-    }
-
+    @Setter
+    @Getter
     @Column(nullable = false)
     private int votes = 0;
 
@@ -83,12 +73,4 @@ public class AnswerEntity {
         comment.setAnswer(null);
     }
 
-    // Explicitly define getter and setter for question
-    public QuestionEntity getQuestion() {
-        return this.question;
-    }
-
-    public void setQuestion(QuestionEntity question) {
-        this.question = question;
-    }
 }

@@ -1,6 +1,6 @@
 package com.hc.stackoverflow.controller;
 
-import com.hc.stackoverflow.entity.dto.ApiResponse;
+import com.hc.stackoverflow.entity.dto.response.ApiResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

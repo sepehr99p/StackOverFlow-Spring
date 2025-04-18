@@ -1,6 +1,6 @@
 package com.hc.stackoverflow.controller;
 
-import com.hc.stackoverflow.entity.dto.LoginRequest;
+import com.hc.stackoverflow.entity.dto.param.LoginRequest;
 import com.hc.stackoverflow.security.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

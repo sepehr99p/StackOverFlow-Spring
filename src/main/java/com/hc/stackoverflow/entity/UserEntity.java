@@ -2,9 +2,7 @@ package com.hc.stackoverflow.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,12 +13,14 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+@Setter
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity implements UserDetails {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,103 +31,38 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    @Getter
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Getter
     @Column
     private String displayName;
 
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
+    @Getter
     @Column
     private String bio;
 
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
-    }
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
-    }
-
+    @Getter
     @Column
     private String profilePictureUrl;
 
-    public Integer getReputation() {
-        return reputation;
-    }
-
-    public void setReputation(Integer reputation) {
-        this.reputation = reputation;
-    }
-
+    @Getter
     @Column
     private Integer reputation = 0;
 
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean active) {
-        isActive = active;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
+    @Getter
     @Column
     private Boolean isActive = true;
 
+    @Getter
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Getter
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    // UserDetails interface implementations
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
@@ -163,12 +98,4 @@ public class UserEntity implements UserDetails {
         return isActive != null && isActive;
     }
 
-    // Custom setters to work with @Data
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }
