@@ -4,11 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class QuestionRequestDto {
-    @NotBlank(message = "title is required")
-    private String title;
+public class AnswerRequestDto {
 
     @NotBlank(message = "Description is required")
     private String Description;
+
+    @NotBlank(message = "QuestionId is required")
+    private Long QuestionId;
 
 }

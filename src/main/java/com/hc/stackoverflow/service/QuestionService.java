@@ -2,8 +2,10 @@ package com.hc.stackoverflow.service;
 
 
 import com.hc.stackoverflow.entity.QuestionEntity;
+import com.hc.stackoverflow.entity.UserEntity;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.repository.QuestionRepository;
+import com.hc.stackoverflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +25,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class QuestionService {
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     @CacheEvict(value = "questions", allEntries = true)
     public QuestionEntity createQuestion(QuestionEntity question) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        question.setUserId(user.getId());
         return questionRepository.save(question);
     }
 

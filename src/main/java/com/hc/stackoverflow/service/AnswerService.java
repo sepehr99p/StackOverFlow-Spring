@@ -3,6 +3,8 @@ package com.hc.stackoverflow.service;
 
 import com.hc.stackoverflow.entity.AnswerEntity;
 import com.hc.stackoverflow.entity.QuestionEntity;
+import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.entity.dto.param.AnswerRequestDto;
 import com.hc.stackoverflow.exception.DuplicateResourceException;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.repository.AnswerRepository;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +31,39 @@ public class AnswerService {
 
     @Transactional
     @CacheEvict(value = "questions", key = "#answer.question.id")
-    public AnswerEntity createAnswer(AnswerEntity answer) {
-        QuestionEntity question = questionRepository.findById(answer.getQuestion().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + answer.getQuestion().getId()));
+    public AnswerEntity createAnswer(AnswerRequestDto request) {
+        QuestionEntity question = questionRepository.findById(request.getQuestionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + request.getQuestionId()));
 
-        Optional<AnswerEntity> existingAnswer = answerRepository.findByQuestionIdAndUserId(
-                question.getId(), answer.getUserId());
-        if (existingAnswer.isPresent()) {
-            throw new DuplicateResourceException("User has already answered this question");
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (answerRepository.existsByQuestionIdAndUserId(question.getId(), user.getId())) {
+            throw new IllegalStateException("You have already answered this question");
         }
+
+        AnswerEntity answer = new AnswerEntity();
+        answer.setDescription(request.getDescription());
+        answer.setUserId(user.getId());
+        answer.setQuestion(question);
+        answer.setAccepted(false);
+        answer.setVotes(0);
 
         return answerRepository.save(answer);
     }
+
+//    @Transactional
+//    @CacheEvict(value = "questions", key = "#answer.question.id")
+//    public AnswerEntity createAnswer(AnswerEntity answer) {
+//        QuestionEntity question = questionRepository.findById(answer.getQuestion().getId())
+//                .orElseThrow(() -> new ResourceNotFoundException("Question not found with id: " + answer.getQuestion().getId()));
+//
+//        Optional<AnswerEntity> existingAnswer = answerRepository.findByQuestionIdAndUserId(
+//                question.getId(), answer.getUserId());
+//        if (existingAnswer.isPresent()) {
+//            throw new DuplicateResourceException("User has already answered this question");
+//        }
+//
+//        return answerRepository.save(answer);
+//    }
 
     @Cacheable(value = "answers", key = "#id")
     public Optional<AnswerEntity> getAnswerById(Long id) {

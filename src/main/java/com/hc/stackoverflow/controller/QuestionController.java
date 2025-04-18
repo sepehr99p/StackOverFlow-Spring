@@ -1,6 +1,7 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.QuestionEntity;
+import com.hc.stackoverflow.entity.dto.param.QuestionRequestDto;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.QuestionService;
@@ -44,11 +45,11 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new question")
     public ResponseEntity<QuestionEntity> createQuestion(
-            @RequestBody QuestionEntity question,
-            @RequestHeader("Authorization") String token) {
-        Long userId = jwtUtil.extractUserIdFromToken(token);
-        question.setUserId(userId);
-        return ResponseEntity.ok(questionService.createQuestion(question));
+            @RequestBody QuestionRequestDto param) {
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setTitle(param.getTitle());
+        questionEntity.setDescription(param.getDescription());
+        return ResponseEntity.ok(questionService.createQuestion(questionEntity));
     }
 
     @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)

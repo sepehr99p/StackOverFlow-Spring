@@ -1,22 +1,19 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.AnswerEntity;
+import com.hc.stackoverflow.entity.dto.param.AnswerRequestDto;
 import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.AnswerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/answers")
@@ -33,8 +30,8 @@ public class AnswerController {
     )
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new answer")
-    public ResponseEntity<AnswerEntity> createAnswer(@RequestBody AnswerEntity answer) {
-        return ResponseEntity.ok(answerService.createAnswer(answer));
+    public ResponseEntity<AnswerEntity> createAnswer(@Valid @RequestBody AnswerRequestDto param) {
+        return ResponseEntity.ok(answerService.createAnswer(param));
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

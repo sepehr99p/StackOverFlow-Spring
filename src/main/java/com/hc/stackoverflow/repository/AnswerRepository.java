@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<AnswerEntity, Long> {
+    boolean existsByQuestionIdAndUserId(Long questionId, Long userId);
     List<AnswerEntity> findByQuestionId(Long questionId);
 
     List<AnswerEntity> findByUserId(Long userId);
