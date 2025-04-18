@@ -1,7 +1,10 @@
 package com.hc.stackoverflow.service;
 
 import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.entity.dto.AuthResponseDto;
+import com.hc.stackoverflow.entity.dto.RegisterRequestDto;
 import com.hc.stackoverflow.repository.UserRepository;
+import com.hc.stackoverflow.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,22 +24,37 @@ import com.hc.stackoverflow.exception.UserAlreadyExistsException;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
 
     @Transactional
     @CacheEvict(value = "users", allEntries = true)
-    public UserEntity createUser(UserEntity user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
+    public AuthResponseDto register(RegisterRequestDto request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
             throw new UserAlreadyExistsException("Username already exists");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("Email already exists");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        UserEntity user = new UserEntity();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setEmail(request.getEmail());
+        user.setDisplayName(request.getUsername());
         user.setIsActive(true);
         user.setReputation(0);
-        return userRepository.save(user);
+
+        UserEntity savedUser = userRepository.save(user);
+
+        String token = jwtUtil.generateToken(savedUser);
+
+        return AuthResponseDto.builder()
+                .token(token)
+                .username(savedUser.getUsername())
+                .build();
     }
+
 
     @Cacheable(value = "users", key = "#id")
     public Optional<UserEntity> getUserById(Long id) {

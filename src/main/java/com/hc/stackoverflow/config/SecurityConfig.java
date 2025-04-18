@@ -15,8 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@EnableWebSecurity
+// this will be my filter chain : Request → JWT Filter → Security Filters → Your Controllers
+
+@Configuration //Tells Spring this is a configuration class
+@EnableWebSecurity //Enables Spring Security's web security support
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -30,13 +32,13 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
+                        .requestMatchers( // also update this at the end of project
                                 "/api/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll() // change it later
                 );
 
         return http.build();

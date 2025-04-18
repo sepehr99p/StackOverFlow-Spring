@@ -1,12 +1,15 @@
 package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.entity.dto.AuthResponseDto;
+import com.hc.stackoverflow.entity.dto.RegisterRequestDto;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +33,8 @@ public class UserController {
     @PostMapping(path = "/register",produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Register a new user")
-    public ResponseEntity<UserEntity> registerUser(@RequestBody UserEntity user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    public ResponseEntity<AuthResponseDto> register(@Valid @RequestBody RegisterRequestDto request) {
+        return ResponseEntity.ok(userService.register(request));
     }
 
     @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
