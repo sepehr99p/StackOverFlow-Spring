@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
+public interface
+CommentRepository extends JpaRepository<CommentEntity, Long> {
     List<CommentEntity> findByQuestionId(Long questionId);
 
     List<CommentEntity> findByAnswerId(Long answerId);

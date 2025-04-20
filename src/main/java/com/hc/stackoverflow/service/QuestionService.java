@@ -3,17 +3,22 @@ package com.hc.stackoverflow.service;
 
 import com.hc.stackoverflow.entity.QuestionEntity;
 import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.entity.dto.param.QuestionRequestDto;
+import com.hc.stackoverflow.entity.dto.response.QuestionResponseDto;
+import com.hc.stackoverflow.exception.QuestionCreationException;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.repository.QuestionRepository;
 import com.hc.stackoverflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,16 +33,52 @@ public class QuestionService {
     private final UserRepository userRepository;
 
     @Transactional
-    @CacheEvict(value = "questions", allEntries = true)
-    public QuestionEntity createQuestion(QuestionEntity question) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public QuestionResponseDto createQuestion(QuestionRequestDto param) {
+        try {
+            if (param.getTitle() == null || param.getTitle().trim().isEmpty()) {
+                throw new QuestionCreationException("Question title cannot be empty");
+            }
+            if (param.getDescription() == null || param.getDescription().trim().isEmpty()) {
+                throw new QuestionCreationException("Question description cannot be empty");
+            }
 
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
 
-        question.setUserId(user.getId());
-        return questionRepository.save(question);
+            UserEntity user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new QuestionCreationException("User not found"));
+
+            if (hasReachedDailyQuestionLimit(user.getId())) {
+                throw new QuestionCreationException("Daily question limit reached");
+            }
+
+            QuestionEntity question = new QuestionEntity();
+            question.setTitle(param.getTitle());
+            question.setDescription(param.getDescription());
+            question.setUserId(user.getId());
+
+            QuestionEntity savedQuestion = questionRepository.save(question);
+
+            return QuestionResponseDto.builder()
+                    .id(savedQuestion.getId())
+                    .title(savedQuestion.getTitle())
+                    .description(savedQuestion.getDescription())
+                    .username(username)
+                    .createdAt(savedQuestion.getCreatedAt())
+                    .build();
+
+        } catch (DataIntegrityViolationException e) {
+            throw new QuestionCreationException("Database error while creating question");
+        } catch (Exception e) {
+            throw new QuestionCreationException("Unexpected error while creating question: " + e.getMessage());
+        }
     }
+
+    private boolean hasReachedDailyQuestionLimit(Long userId) {
+        // Implement logic later
+        return false;
+    }
+
 
     @Cacheable(value = "questions", key = "#id")
     public Optional<QuestionEntity> getQuestionById(Long id) {

@@ -2,13 +2,15 @@ package com.hc.stackoverflow.controller;
 
 import com.hc.stackoverflow.entity.QuestionEntity;
 import com.hc.stackoverflow.entity.dto.param.QuestionRequestDto;
+import com.hc.stackoverflow.entity.dto.response.ApiResponse;
+import com.hc.stackoverflow.entity.dto.response.QuestionResponseDto;
+import com.hc.stackoverflow.exception.QuestionCreationException;
 import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.security.JwtUtil;
 import com.hc.stackoverflow.service.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -44,15 +46,24 @@ public class QuestionController {
     )
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Create a new question")
-    public ResponseEntity<QuestionEntity> createQuestion(
+    public ResponseEntity<ApiResponse<QuestionResponseDto>> createQuestion(
             @RequestBody QuestionRequestDto param) {
-        QuestionEntity questionEntity = new QuestionEntity();
-        questionEntity.setTitle(param.getTitle());
-        questionEntity.setDescription(param.getDescription());
-        return ResponseEntity.ok(questionService.createQuestion(questionEntity));
+        try {
+            QuestionResponseDto createdQuestion = questionService.createQuestion(param);
+            return ResponseEntity.ok(
+                    ApiResponse.success(
+                            createdQuestion,
+                            "Question created successfully"
+                    )
+            );
+        } catch (QuestionCreationException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(ApiResponse.error(e.getMessage(), "QUESTION_CREATION_ERROR"));
+        }
     }
 
-    @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get question by ID")
     public ResponseEntity<QuestionEntity> getQuestion(@PathVariable Long id) {
         return questionService.getQuestionById(id)
@@ -66,7 +77,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.getAllQuestions());
     }
 
-    @GetMapping(path = "/my",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/my", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get my questions")
     public ResponseEntity<List<QuestionEntity>> getMyQuestions(
@@ -75,7 +86,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.getQuestionsByUserId(userId));
     }
 
-    @GetMapping(path = "/search",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Search questions")
     public ResponseEntity<Page<QuestionEntity>> searchQuestions(
             @RequestParam String query,
@@ -84,7 +95,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.searchQuestions(query, page, size));
     }
 
-    @DeleteMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Delete a question")
     public ResponseEntity<Void> deleteQuestion(
@@ -96,7 +107,7 @@ public class QuestionController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Update a question")
     public ResponseEntity<QuestionEntity> updateQuestion(
@@ -108,7 +119,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.updateQuestion(id, question));
     }
 
-    @PostMapping(path = "/{id}/vote-up",produces = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/{id}/vote-up", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote up a question")
@@ -116,7 +127,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.updateQuestionVotes(id, 1));
     }
 
-    @PostMapping(path = "/{id}/vote-down",produces = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/{id}/vote-down", produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Vote down a question")

@@ -19,6 +19,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(QuestionCreationException.class)
+    public ResponseEntity<ApiResponse<?>> handleQuestionCreationException(QuestionCreationException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(ApiResponse.error(e.getMessage(), "QUESTION_CREATION_ERROR"));
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(
             ResourceNotFoundException ex,
