@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
         errorData.put("error", "NOT_FOUND");
         errorData.put("message", ex.getMessage());
         ErrorResponse test = new ErrorResponse();
-        test.setErrorMessage(errorData);
+        test.setError(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
         errorData.put("message", ex.getMessage());
 
         ErrorResponse test = new ErrorResponse();
-        test.setErrorMessage(errorData);
+        test.setError(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
         errorData.put("error", "USER_EXISTS");
         errorData.put("message", ex.getMessage());
         ErrorResponse test = new ErrorResponse();
-        test.setErrorMessage(errorData);
+        test.setError(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
         errorData.put("error", "FORBIDDEN");
         errorData.put("message", "You don't have permission to perform this action");
         ErrorResponse test = new ErrorResponse();
-        test.setErrorMessage(errorData);
+        test.setError(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
         errorData.put("error", "UNAUTHORIZED");
         errorData.put("message", "Invalid credentials");
         ErrorResponse test = new ErrorResponse();
-        test.setErrorMessage(errorData);
+        test.setError(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -109,7 +109,7 @@ public class GlobalExceptionHandler {
         errorData.put("error", "BAD_REQUEST");
         errorData.put("message", ex.getMessage());
         ErrorResponse test = new ErrorResponse();
-        test.setErrorMessage(errorData);
+        test.setError(errorData);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

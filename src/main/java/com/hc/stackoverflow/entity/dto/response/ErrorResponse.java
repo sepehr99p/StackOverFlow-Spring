@@ -12,5 +12,5 @@ import java.util.Map;
 @NoArgsConstructor
 public class ErrorResponse {
 
-    private Map<String,String> errorMessage;
+    private Map<String,String> error;
 }
