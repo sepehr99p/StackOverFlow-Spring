@@ -1,7 +1,18 @@
 package com.hc.stackoverflow.service;
 
 import com.hc.stackoverflow.entity.CommentEntity;
+import com.hc.stackoverflow.entity.QuestionCommentEntity;
+import com.hc.stackoverflow.entity.AnswerCommentEntity;
+import com.hc.stackoverflow.entity.QuestionEntity;
+import com.hc.stackoverflow.entity.AnswerEntity;
+import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.exception.ResourceNotFoundException;
 import com.hc.stackoverflow.repository.CommentRepository;
+import com.hc.stackoverflow.repository.QuestionCommentRepository;
+import com.hc.stackoverflow.repository.AnswerCommentRepository;
+import com.hc.stackoverflow.repository.QuestionRepository;
+import com.hc.stackoverflow.repository.AnswerRepository;
+import com.hc.stackoverflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,17 +30,42 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final QuestionCommentRepository questionCommentRepository;
+    private final AnswerCommentRepository answerCommentRepository;
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    @CacheEvict(value = {"comments", "questions", "answers"}, allEntries = true)
-    public CommentEntity createComment(CommentEntity comment) {
-        // Validate that either question or answer is present, but not both
-        if ((comment.getQuestion() == null && comment.getAnswer() == null) ||
-                (comment.getQuestion() != null && comment.getAnswer() != null)) {
-            throw new RuntimeException("Comment must be associated with either a question or an answer, but not both");
-        }
+    public QuestionCommentEntity createQuestionComment(Long questionId, String content, Long userId) {
+        QuestionEntity question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
 
-        return commentRepository.save(comment);
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        QuestionCommentEntity comment = new QuestionCommentEntity();
+        comment.setContent(content);
+        comment.setQuestion(question);
+        comment.setUserId(userId);
+
+        return questionCommentRepository.save(comment);
+    }
+
+    @Transactional
+    public AnswerCommentEntity createAnswerComment(Long answerId, String content, Long userId) {
+        AnswerEntity answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Answer not found"));
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        AnswerCommentEntity comment = new AnswerCommentEntity();
+        comment.setContent(content);
+        comment.setAnswer(answer);
+        comment.setUserId(userId);
+
+        return answerCommentRepository.save(comment);
     }
 
     @Cacheable(value = "comments", key = "#id")
@@ -68,5 +104,13 @@ public class CommentService {
     @CacheEvict(value = {"comments", "questions", "answers"}, allEntries = true)
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
+    }
+
+    public List<QuestionCommentEntity> getQuestionComments(Long questionId) {
+        return questionCommentRepository.findByQuestionId(questionId);
+    }
+
+    public List<AnswerCommentEntity> getAnswerComments(Long answerId) {
+        return answerCommentRepository.findByAnswerId(answerId);
     }
 }

@@ -1,19 +1,18 @@
 package com.hc.stackoverflow.exception;
 
 
+import com.hc.stackoverflow.entity.dto.response.ApiResponse;
 import com.hc.stackoverflow.entity.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.Map;
-
-
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 
 
 @ControllerAdvice

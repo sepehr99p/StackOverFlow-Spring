@@ -1,15 +1,24 @@
 package com.hc.stackoverflow.controller;
 
+import com.hc.stackoverflow.entity.AnswerCommentEntity;
 import com.hc.stackoverflow.entity.CommentEntity;
+import com.hc.stackoverflow.entity.QuestionCommentEntity;
+import com.hc.stackoverflow.entity.UserEntity;
+import com.hc.stackoverflow.entity.dto.param.CommentRequestDto;
+import com.hc.stackoverflow.entity.dto.response.ApiResponse;
+import com.hc.stackoverflow.exception.ResourceNotFoundException;
+import com.hc.stackoverflow.repository.UserRepository;
 import com.hc.stackoverflow.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,15 +30,58 @@ import java.util.List;
 @SecurityRequirement(name = "bearerAuth")
 public class CommentController {
     private final CommentService commentService;
+    private final UserRepository userRepository;
 
-    @PostMapping(
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            consumes = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping("/api/questions/{questionId}/comments")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "Create a new comment")
-    public ResponseEntity<CommentEntity> createComment(@RequestBody CommentEntity comment) {
-        return ResponseEntity.ok(commentService.createComment(comment));
+    public ResponseEntity<ApiResponse<QuestionCommentEntity>> createQuestionComment(
+            @PathVariable Long questionId,
+            @Valid @RequestBody CommentRequestDto request) {
+        
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        QuestionCommentEntity comment = commentService.createQuestionComment(
+            questionId,
+            request.getDescription(),
+            user.getId()
+        );
+
+        return ResponseEntity.ok(ApiResponse.success(comment, "Comment created successfully"));
+    }
+
+    @PostMapping("/api/answers/{answerId}/comments")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<AnswerCommentEntity>> createAnswerComment(
+            @PathVariable Long answerId,
+            @Valid @RequestBody CommentRequestDto request) {
+        
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        AnswerCommentEntity comment = commentService.createAnswerComment(
+            answerId,
+            request.getDescription(),
+            user.getId()
+        );
+
+        return ResponseEntity.ok(ApiResponse.success(comment, "Comment created successfully"));
+    }
+
+    @GetMapping("/api/questions/{questionId}/comments")
+    public ResponseEntity<ApiResponse<List<QuestionCommentEntity>>> getQuestionComments(
+            @PathVariable Long questionId) {
+        List<QuestionCommentEntity> comments = commentService.getQuestionComments(questionId);
+        return ResponseEntity.ok(ApiResponse.success(comments, "Comments retrieved successfully"));
+    }
+
+    @GetMapping("/api/answers/{answerId}/comments")
+    public ResponseEntity<ApiResponse<List<AnswerCommentEntity>>> getAnswerComments(
+            @PathVariable Long answerId) {
+        List<AnswerCommentEntity> comments = commentService.getAnswerComments(answerId);
+        return ResponseEntity.ok(ApiResponse.success(comments, "Comments retrieved successfully"));
     }
 
     @GetMapping(path = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)

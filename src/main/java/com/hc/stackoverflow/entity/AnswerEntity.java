@@ -65,12 +65,12 @@ public class AnswerEntity {
     // Helper methods for managing relationships
     public void addComment(CommentEntity comment) {
         comments.add(comment);
-        comment.setAnswer(this);
+        comment.setReferenceType(ReferenceType.ANSWER);
+        comment.setReferenceId(this.id);
     }
 
     public void removeComment(CommentEntity comment) {
         comments.remove(comment);
-        comment.setAnswer(null);
     }
 
 }

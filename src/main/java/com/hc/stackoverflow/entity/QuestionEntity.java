@@ -89,12 +89,12 @@ public class QuestionEntity {
 
     public void addComment(CommentEntity comment) {
         comments.add(comment);
-        comment.setQuestion(this);
+        comment.setReferenceType(ReferenceType.QUESTION);
+        comment.setReferenceId(this.id);
     }
 
     public void removeComment(CommentEntity comment) {
         comments.remove(comment);
-        comment.setQuestion(null);
     }
 
 }
